@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>AI Terms & Conditions Simplifier</title>
+</head>
+<body>
+    <h2>Paste Terms & Conditions</h2>
+
+    <textarea id="inputText" rows="12" cols="100"></textarea><br><br>
+
+    <button onclick="analyze()">Analyze</button>
+
+    <h3>Result</h3>
+    <pre id="result"></pre>
+
+    <script>
+        function analyze() {
+            let text = document.getElementById("inputText").value;
+
+            fetch("/api/documents/text", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ text: text })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("result").innerText =
+                    "Saved document id: " + data.id +
+                    "\nStatus: " + data.status +
+                    "\nFile name: " + data.fileName +
+                    "\n\nOpen full result here:\nhttp://localhost:8080/api/documents/" + data.id;
+            })
+            .catch(error => {
+                document.getElementById("result").innerText = "Error: " + error;
+            });
+        }
+    </script>
+</body>
+</html>
